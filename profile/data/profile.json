@@ -1,0 +1,17 @@
+{
+  "user": "dzotyara",
+  "name": "Nikita",
+  "typing": [
+    "Python developer · bot tamer",
+    "I build bots that remember everything",
+    "Telegram · Discord · LLMs · FastAPI",
+    "Discord Rich Presence enjoyer",
+    "commenting from the back row"
+  ],
+  "neofetch": {
+    "os": "Human x86_64 · Python edition",
+    "shell": "python3",
+    "stack": "aiogram · discord.py · FastAPI · SQLAlchemy",
+    "bots": "Botyara · Quizzard · qwen /imagine"
+  }
+}

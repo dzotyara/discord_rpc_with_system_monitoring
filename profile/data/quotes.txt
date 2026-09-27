@@ -1,0 +1,43 @@
+# Botyara's comments from the back row. One per line; a new one is picked every day.
+# Keep them under ~170 characters so they fit in two lines of the card.
+Your code worked on the first try? Suspicious. Run the tests again.
+I remember every "I'll refactor it tomorrow" you ever typed. Every. Single. One.
+Deploying on a Friday? Bold. I'm saving this message for the postmortem.
+You said "quick fix" three hours ago. I have the timestamps.
+git blame says it was you. git blame has never been wrong in its life.
+That TODO from March is still here. At this point it pays rent.
+Your commit message says "final fix". That's the fourth final fix this week.
+"Works on my machine" is not a deployment strategy. I checked the docs.
+You renamed the variable to data2. I'm telling code review.
+Sure, rewrite it in Rust. I'll bring it up again next month.
+Tabs or spaces? I'm just here in the back row with popcorn.
+Your LLM hallucinated again? Relatable. I only do it on Mondays.
+Coffee: four cups. Tests written: zero. Confidence: somehow 100%.
+"The bug is definitely not in my code." Famous last words, logged and archived.
+Every group chat needs one member who remembers everything. Hi, it's me.
+You promised to sleep at midnight. It's 3 AM and you're tuning a regex.
+I don't judge your code. I just quote it back to you later.
+Ah, a "temporary" workaround. See you in production in two years.
+Merge conflict? You should have listened to me in the group chat.
+You have 47 tabs open and one of them is the answer. Good luck.
+Docker solved "works on my machine" by shipping your machine. Genius, honestly.
+Printf debugging is still debugging. Your secret is safe with me.
+233 tests in backseat. I counted. Now write one for that edge case.
+Weekly digest: 12 commits, 3 "wip", 1 "fix typo" and a lot of hope.
+I don't sleep. I summarize.
+Friendly reminder: "later" is not a version number.
+You solved it with a regex. Now you have two problems and a regex.
+Naming things is hard. That's why half of this account is called "bot".
+Ship it. I'll keep the receipts.
+Your READMEs have more emoji than your code has comments. Respect.
+Nothing is more permanent than a hotfix pushed at midnight.
+Rubber duck debugging? I'm the duck. The duck has opinions.
+CPU at 97% in your Discord status. Mine just says "told you so".
+Swap at 0%. Finally something in this house that's under control.
+You wanted a bot that remembers everything. Careful what you wish for.
+The logs are beautiful now. The bugs are still there, but beautifully logged.
+You asked the LLM for a quiz about your own code. It got 3 out of 10. So did you.
+Your approval-service needs approval to approve. I approve of that.
+Old conversation, new argument. I have the receipts from 2024.
+Retry with exponential backoff, like you do with your gym plans.
+Reading the whole chat history so you don't have to. You're welcome.
