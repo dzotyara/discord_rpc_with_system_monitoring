@@ -2,16 +2,16 @@
   "user": "dzotyara",
   "name": "Nikita",
   "typing": [
-    "Python developer · bot tamer",
-    "I build bots that remember everything",
-    "Telegram · Discord · LLMs · FastAPI",
-    "Discord Rich Presence enjoyer",
-    "commenting from the back row"
+    "Python-разработчик · укротитель ботов",
+    "Делаю ботов, которые всё помнят",
+    "Telegram · Discord · LLM · FastAPI",
+    "Фанат Discord Rich Presence",
+    "Комментирую с задней парты"
   ],
   "neofetch": {
-    "os": "Human x86_64 · Python edition",
+    "os": "Человек x86_64 · сборка Python",
     "shell": "python3",
     "stack": "aiogram · discord.py · FastAPI · SQLAlchemy",
-    "bots": "Botyara · Quizzard · qwen /imagine"
+    "bots": "Ботяра · Quizzard · qwen /imagine"
   }
 }

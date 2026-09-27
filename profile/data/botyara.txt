@@ -1,11 +1,11 @@
-# Botyara as 40x39 pixel art, drawn from backseat/docs/assets/avatar.png.
-# One character per pixel. Lines starting with "#" are comments.
-#   .  transparent        W  white            L  light grey       G  mid grey
-#   O  lavender shadow    S  screen           s  screen gloss     E  teal (eyes, mouth)
-#   C  coral              c  dark coral       X  highlight
-# Animated groups (drawn on top of the screen/bubble):
-#   A  antenna LED        a  antenna LED shade   H  antenna LED highlight
-#   D  "typing" dots      R  right eye           r  right eye highlight
+# Ботяра в виде пиксель-арта 40x39, нарисован по backseat/docs/assets/avatar.png.
+# Один символ — один пиксель. Строки с "#" — комментарии.
+#   .  прозрачный          W  белый               L  светло-серый      G  серый
+#   O  лавандовая тень     S  экран               s  блик экрана       E  бирюзовый (глаза, рот)
+#   C  коралловый          c  тёмно-коралловый    X  блик
+# Анимированные группы (рисуются поверх экрана и облачка):
+#   A  лампочка антенны    a  тень лампочки       H  блик лампочки
+#   D  точки «печатает»    R  правый глаз         r  блик правого глаза
 ..............................CCCCCCCC..
 ...............AA............CCCCCCCCCC.
 ..............AHAA..........CCCCCCCCCCCC

@@ -69,7 +69,8 @@ LANG_COLORS = {
     "Mako": "#7e858d",
     "Jinja": "#a52a22",
 }
-OTHER_COLOR = "#6e6a9a"
+OTHER, OTHER_COLOR = "Другое", "#6e6a9a"
+MONTHS = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
 
 MONO = "'JBMono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 SANS = "'gg sans', 'Noto Sans', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif"
@@ -215,12 +216,26 @@ def system_stats(proc: Path = Path("/proc"), interval: float = 0.5, sleep=time.s
         stats["swap_total"] = memory.get("SwapTotal", 0)
         stats["swap_used"] = memory.get("SwapTotal", 0) - memory.get("SwapFree", 0)
     except (OSError, ValueError, KeyError, IndexError) as error:
-        warn(f"system stats unavailable, the card will say n/a: {error}")
+        warn(f"system stats unavailable, CPU/RAM/SWAP will show н/д: {error}")
     return stats
 
 
+def plural(n: int, one: str, few: str, many: str) -> str:
+    """Russian plural form: 1 год, 2 года, 5 лет, 11 лет, 21 год."""
+    n = abs(n)
+    if n % 10 == 1 and n % 100 != 11:
+        return one
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return few
+    return many
+
+
+def count(n: int, one: str, few: str, many: str) -> str:
+    return f"{n} {plural(n, one, few, many)}"
+
+
 def human_uptime(start: dt.datetime, now: dt.datetime) -> str:
-    """Calendar distance like '6 years, 1 month, 28 days'."""
+    """Calendar distance like '6 лет, 1 месяц, 28 дней'."""
     years, months, days = now.year - start.year, now.month - start.month, now.day - start.day
     if days < 0:
         months -= 1
@@ -228,12 +243,16 @@ def human_uptime(start: dt.datetime, now: dt.datetime) -> str:
     if months < 0:
         years -= 1
         months += 12
-    parts = [(years, "year"), (months, "month"), (days, "day")]
-    return ", ".join(f"{n} {unit}{'' if n == 1 else 's'}" for n, unit in parts if n) or "0 days"
+    parts = [
+        (years, ("год", "года", "лет")),
+        (months, ("месяц", "месяца", "месяцев")),
+        (days, ("день", "дня", "дней")),
+    ]
+    return ", ".join(count(n, *forms) for n, forms in parts if n) or "0 дней"
 
 
 def top_languages(sizes: dict[str, int], limit: int = 3) -> list[tuple[str, float, str]]:
-    """[(name, percent, colour)] for the biggest languages, the rest folded into 'Other'."""
+    """[(name, percent, colour)] for the biggest languages, the rest folded into OTHER."""
     total = sum(sizes.values())
     if not total:
         return []
@@ -241,7 +260,7 @@ def top_languages(sizes: dict[str, int], limit: int = 3) -> list[tuple[str, floa
     top = [(name, 100 * size / total, LANG_COLORS.get(name, OTHER_COLOR)) for name, size in ranked[:limit]]
     rest = sum(size for _, size in ranked[limit:])
     if rest:
-        top.append(("Other", 100 * rest / total, OTHER_COLOR))
+        top.append((OTHER, 100 * rest / total, OTHER_COLOR))
     return top
 
 
@@ -252,12 +271,12 @@ def pct(value: float) -> str:
 def pushed_when(pushed: dt.datetime, now: dt.datetime) -> str:
     days = (now.date() - pushed.date()).days
     if days <= 0:
-        return "today"
+        return "сегодня"
     if days == 1:
-        return "yesterday"
+        return "вчера"
     if days < 7:
-        return f"{days} days ago"
-    return f"{pushed:%b} {pushed.day}" + ("" if pushed.year == now.year else f", {pushed.year}")
+        return f"{count(days, 'день', 'дня', 'дней')} назад"
+    return f"{pushed.day} {MONTHS[pushed.month - 1]}" + ("" if pushed.year == now.year else f" {pushed.year}")
 
 
 def gigabytes(size: int) -> str:
@@ -491,7 +510,7 @@ def render_wave(size: int = 40) -> str:
         f'font-family="{esc(EMOJI)}">👋<animateTransform attributeName="transform" type="rotate" '
         f'values="{values}" keyTimes="0;.08;.16;.24;.32;.4;.48;1" dur="2.6s" repeatCount="indefinite"/></text>'
     )
-    return svg_doc(size, size, "waving hand", "", body)
+    return svg_doc(size, size, "машет рукой", "", body)
 
 
 def render_neofetch(
@@ -518,39 +537,40 @@ def render_neofetch(
             parts = [(parts, TEXT)]
         rows.append({"label": label, "parts": parts, "icon": icon, "fills": fills})
 
-    add("OS", fit(info.get("os", "Human"), text_limit))
-    add("Host", f"github.com/{login}")
-    add("Uptime", human_uptime(parse_time(user["created_at"]), now))
-    packages = [f"{user['public_repos']} public repos"]
+    add("ОС", fit(info.get("os", "Человек"), text_limit))
+    add("Хост", f"github.com/{login}")
+    add("Аптайм", human_uptime(parse_time(user["created_at"]), now))
+    packages = [count(user["public_repos"], "репозиторий", "репозитория", "репозиториев")]
     stars = [repo.get("stars") for repo in own]
     if stars and None not in stars:
-        packages.append(f"{sum(stars)} stars")
+        packages.append(count(sum(stars), "звезда", "звезды", "звёзд"))
     if user.get("followers") is not None:
-        packages.append(f"{user['followers']} followers")
-    add("Packages", fit(" · ".join(packages), text_limit))
+        packages.append(count(user["followers"], "подписчик", "подписчика", "подписчиков"))
+    add("Пакеты", fit(" · ".join(packages), text_limit))
     if info.get("shell"):
-        add("Shell", fit(info["shell"], text_limit))
+        add("Шелл", fit(info["shell"], text_limit))
     if info.get("stack"):
-        add("Stack", fit(info["stack"], text_limit))
+        add("Стек", fit(info["stack"], text_limit))
     if own:
         latest = max(own, key=lambda repo: repo["pushed_at"] or "")
-        when = f" · pushed {pushed_when(parse_time(latest['pushed_at']), now)}" if latest["pushed_at"] else ""
-        add("Now", [(fit(latest["name"], text_limit - len(when)), TEAL), (when, MUTED)])
+        when = f" · пуш {pushed_when(parse_time(latest['pushed_at']), now)}" if latest["pushed_at"] else ""
+        add("Сейчас", [(fit(latest["name"], text_limit - len(when)), TEAL), (when, MUTED)])
     if snap.get("contributions_last_year") is not None:
-        add("Activity", f"{snap['contributions_last_year']} contributions in the last year")
+        contributions = snap["contributions_last_year"]
+        add("Активность", count(contributions, "контрибуция", "контрибуции", "контрибуций") + " за год")
     languages = top_languages(snap.get("languages", {}))
     if languages:
-        legend = " · ".join(f"{lang} {pct(share)}" for lang, share, _ in languages if lang != "Other")
-        add("Languages", fit(legend, bar_text_limit), fills=[(share / 100, color) for _, share, color in languages])
+        legend = " · ".join(f"{lang} {pct(share)}" for lang, share, _ in languages if lang != OTHER)
+        add("Языки", fit(legend, bar_text_limit), fills=[(share / 100, color) for _, share, color in languages])
     if info.get("bots"):
-        add("Bots", fit(info["bots"], text_limit))
+        add("Боты", fit(info["bots"], text_limit))
 
     cpu = system.get("cpu_percent")
     model = system.get("cpu_model") or "CPU"
-    count = f" ×{system['cpu_count']}" if system.get("cpu_count") else ""
+    cores = f" ×{system['cpu_count']}" if system.get("cpu_count") else ""
     add(
         "CPU",
-        fit(f"{cpu:.0f}% · {model}{count}", bar_text_limit) if cpu is not None else "n/a",
+        fit(f"{cpu:.0f}% · {model}{cores}", bar_text_limit) if cpu is not None else "н/д",
         icon="🖥️",
         fills=cpu / 100 if cpu is not None else 0,
     )
@@ -558,12 +578,12 @@ def render_neofetch(
         used, total = system["mem_used"], system["mem_total"]
         add("RAM", f"{gigabytes(used)} / {gigabytes(total)} GB", icon="💾", fills=used / total)
     else:
-        add("RAM", "n/a", icon="💾", fills=0)
+        add("RAM", "н/д", icon="💾", fills=0)
     if system.get("swap_total"):
         used, total = system["swap_used"], system["swap_total"]
         add("SWAP", f"{gigabytes(used)} / {gigabytes(total)} GB", icon="🗄️", fills=used / total)
     else:
-        add("SWAP", "off", icon="🗄️", fills=0)
+        add("SWAP", "выкл", icon="🗄️", fills=0)
 
     header_y, first_y = 102, 150
     logo_bottom = 92 + 6 * len(pixels)
@@ -593,9 +613,9 @@ def render_neofetch(
     body.append(render_pixels(pixels, 28, 92, 6))
     body.append(
         f'<g class="in" style="animation-delay:1.2s">'
-        f'<text x="148" y="{logo_bottom + 30}" text-anchor="middle" class="caption">Botyara v1.0</text>'
+        f'<text x="148" y="{logo_bottom + 30}" text-anchor="middle" class="caption">Ботяра v1.0</text>'
         f'<text x="148" y="{logo_bottom + 50}" text-anchor="middle" class="small">'
-        "commenting from the back row</text></g>"
+        "комментирую с задней парты</text></g>"
     )
     header = segments([(name.lower(), TEAL), ("@", MUTED), (login, PURPLE)])
     body.append(
@@ -625,14 +645,14 @@ def render_neofetch(
         for i, color in enumerate(palette)
     )
     body.append(f'<g class="in" style="animation-delay:{1.05 + len(rows) * 0.06:.2f}s">{swatches}</g>')
-    where = "GitHub Actions runner" if os.environ.get("GITHUB_ACTIONS") == "true" else "local machine"
-    source = "live GitHub stats" if live else f"snapshot of {snap.get('fetched_at', '?')[:10]}"
+    where = "раннере GitHub Actions" if os.environ.get("GITHUB_ACTIONS") == "true" else "локальной машине"
+    source = "живая статистика GitHub" if live else f"снимок от {snap.get('fetched_at', '?')[:10]}"
     body.append(
         f'<g class="in" style="animation-delay:{1.2 + len(rows) * 0.06:.2f}s">'
         f'<text x="24" y="{height - 22}">{segments(prompt)}</text>'
         f'<rect class="cursor" x="{command_x:.1f}" y="{height - 35}" width="{char:.0f}" height="17" fill="{TEAL}"/>'
         f'<text x="{width - 24}" y="{height - 22}" text-anchor="end" class="small">'
-        f"{esc(source)} · drawn {now:%Y-%m-%d %H:%M} UTC on a {where}</text></g>"
+        f"{esc(source)} · нарисовано {now:%Y-%m-%d %H:%M} UTC на {where}</text></g>"
     )
     css = (
         font_css(fonts, 400, 700)
@@ -651,7 +671,7 @@ def render_neofetch(
         + ".cursor{animation:blink 1.1s steps(1,end) infinite}@keyframes blink{50%{opacity:0}}"
         + CALM
     )
-    title = f"neofetch for {login}: {user['public_repos']} public repos"
+    title = f"neofetch для {login}: " + count(user["public_repos"], "репозиторий", "репозитория", "репозиториев")
     return svg_doc(width, height, title, css, "".join(body))
 
 
@@ -672,17 +692,17 @@ def render_says(quote: str, avatar: bytes, now: dt.datetime, width: int = 860) -
     )
     body = (
         f'<rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="14" fill="{BG}" stroke="{BORDER}"/>'
-        f'<text x="24" y="27" class="channel"><tspan fill="{MUTED}"># </tspan>back-row</text>'
+        f'<text x="24" y="27" class="channel"><tspan fill="{MUTED}"># </tspan>задняя-парта</text>'
         f'<text x="{width - 24}" y="27" text-anchor="end" class="time">{now:%d.%m.%Y}</text>'
         f'<line x1="0.5" y1="{top}" x2="{width - 0.5}" y2="{top}" stroke="{BORDER}"/>'
         f'<clipPath id="avatar"><circle cx="46" cy="{top + 34}" r="22"/></clipPath>'
         f'<image href="data:image/png;base64,{image}" x="24" y="{top + 12}" width="44" height="44" '
         f'clip-path="url(#avatar)"/>'
-        f'<text x="84" y="{top + 30}" class="name">Botyara</text>'
+        f'<text x="84" y="{top + 30}" class="name">Ботяра</text>'
         f'<rect x="156" y="{top + 17}" width="30" height="16" rx="4" fill="#5865f2"/>'
         f'<text x="171" y="{top + 29}" text-anchor="middle" class="tag">BOT</text>'
-        f'<text x="196" y="{top + 29.5}" class="time">Today at {now:%H:%M}</text>'
-        f'<g class="typing">{dots}<text x="124" y="{first}" class="time">Botyara is typing…</text></g>'
+        f'<text x="196" y="{top + 29.5}" class="time">Сегодня в {now:%H:%M}</text>'
+        f'<g class="typing">{dots}<text x="124" y="{first}" class="time">Ботяра печатает…</text></g>'
         f'<g class="message"><text class="text">{message}</text>'
         f'<rect x="84" y="{chip_y}" width="58" height="26" rx="8" fill="{PANEL}" stroke="{PURPLE}"/>'
         f'<text x="94" y="{chip_y + 18}" class="chip"><tspan class="emoji">😂</tspan> {laughs}</text></g>'
@@ -699,7 +719,7 @@ def render_says(quote: str, avatar: bytes, now: dt.datetime, width: int = 860) -
         ".message{animation:message .45s ease-out 1.8s both}"
         "@keyframes message{from{opacity:0;transform:translateY(4px)}}" + CALM
     )
-    return svg_doc(width, height, f"Botyara says: {quote}", css, body)
+    return svg_doc(width, height, f"Ботяра говорит: {quote}", css, body)
 
 
 def render_snake_placeholder(dark: bool) -> str:
@@ -720,10 +740,10 @@ def render_snake_placeholder(dark: bool) -> str:
     color = MUTED if dark else "#57606a"
     body = (
         f'{squares}<text x="{width / 2}" y="{height - 16}" text-anchor="middle" '
-        f'fill="{color}">the snake hatches after the first workflow run</text>'
+        f'fill="{color}">змейка вылупится после первого запуска GitHub Action</text>'
     )
     css = f"text{{font-family:{SANS};font-size:13px}}"
-    return svg_doc(width, height, "contribution snake placeholder", css, body)
+    return svg_doc(width, height, "заглушка змейки контрибуций", css, body)
 
 
 # --------------------------------------------------------------------------- main

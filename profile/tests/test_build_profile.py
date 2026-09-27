@@ -67,37 +67,58 @@ API_RESPONSES = {
 class UptimeTest(unittest.TestCase):
     def test_borrows_days_from_the_previous_month(self):
         start = dt.datetime(2020, 7, 30, 14, 41, tzinfo=dt.UTC)
-        self.assertEqual(bp.human_uptime(start, NOW), "6 years, 1 month, 28 days")
+        self.assertEqual(bp.human_uptime(start, NOW), "6 лет, 1 месяц, 28 дней")
 
     def test_borrows_months_across_new_year(self):
         start = dt.datetime(2025, 11, 30, tzinfo=dt.UTC)
         now = dt.datetime(2026, 1, 15, tzinfo=dt.UTC)
-        self.assertEqual(bp.human_uptime(start, now), "1 month, 16 days")
+        self.assertEqual(bp.human_uptime(start, now), "1 месяц, 16 дней")
 
     def test_singular_and_empty_parts(self):
         start = dt.datetime(2025, 9, 26, tzinfo=dt.UTC)
-        self.assertEqual(bp.human_uptime(start, NOW), "1 year, 1 day")
-        self.assertEqual(bp.human_uptime(NOW, NOW), "0 days")
+        self.assertEqual(bp.human_uptime(start, NOW), "1 год, 1 день")
+        self.assertEqual(bp.human_uptime(NOW, NOW), "0 дней")
 
 
 class NumbersTest(unittest.TestCase):
     def test_top_languages_fold_the_tail_into_other(self):
         languages = bp.top_languages({"Python": 900, "HTML": 50, "CSS": 30, "Shell": 15, "Go": 5})
-        self.assertEqual([name for name, _, _ in languages], ["Python", "HTML", "CSS", "Other"])
+        self.assertEqual([name for name, _, _ in languages], ["Python", "HTML", "CSS", "Другое"])
         self.assertAlmostEqual(sum(share for _, share, _ in languages), 100)
         self.assertEqual(languages[0][2], "#3572A5")
         self.assertEqual(bp.top_languages({}), [])
+
+    def test_russian_plurals(self):
+        forms = ("год", "года", "лет")
+        cases = {
+            1: "год",
+            2: "года",
+            4: "года",
+            5: "лет",
+            11: "лет",
+            12: "лет",
+            14: "лет",
+            21: "год",
+            22: "года",
+            25: "лет",
+            101: "год",
+            111: "лет",
+            0: "лет",
+        }
+        for n, expected in cases.items():
+            self.assertEqual(bp.plural(n, *forms), expected, n)
+        self.assertEqual(bp.count(2, "подписчик", "подписчика", "подписчиков"), "2 подписчика")
 
     def test_pct(self):
         self.assertEqual(bp.pct(0.4), "<1%")
         self.assertEqual(bp.pct(93.4), "93%")
 
     def test_pushed_when(self):
-        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(hours=1), NOW), "today")
-        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(days=1), NOW), "yesterday")
-        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(days=3), NOW), "3 days ago")
-        self.assertEqual(bp.pushed_when(dt.datetime(2026, 8, 15, tzinfo=dt.UTC), NOW), "Aug 15")
-        self.assertEqual(bp.pushed_when(dt.datetime(2025, 12, 20, tzinfo=dt.UTC), NOW), "Dec 20, 2025")
+        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(hours=1), NOW), "сегодня")
+        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(days=1), NOW), "вчера")
+        self.assertEqual(bp.pushed_when(NOW - dt.timedelta(days=3), NOW), "3 дня назад")
+        self.assertEqual(bp.pushed_when(dt.datetime(2026, 8, 15, tzinfo=dt.UTC), NOW), "15 авг")
+        self.assertEqual(bp.pushed_when(dt.datetime(2025, 12, 20, tzinfo=dt.UTC), NOW), "20 дек 2025")
 
     def test_discrete_keeps_the_last_value_of_a_moment(self):
         key_times, values = bp.discrete([(0, 0), (0.5, 1), (0.50001, 2), (1.5, 3)], 2.0)
@@ -255,22 +276,22 @@ class BuildTest(unittest.TestCase):
         quiet(bp.build, self.root, offline=True, now=NOW, system=lambda: SYSTEM)
         neofetch = self.card("generated/neofetch.svg")
         for text in (
-            "6 years, 1 month, 28 days",
+            "6 лет, 1 месяц, 28 дней",
             "backseat",
-            "pushed today",
+            "пуш сегодня",
             "Python 93%",
             "12% · AMD EPYC 7763 ×4",
             "2.0 / 16.0 GB",
-            "snapshot of 2026-09-27",
+            "снимок от 2026-09-27",
         ):
             self.assertIn(text, neofetch)
-        self.assertNotIn("contributions", neofetch)  # unknown in the snapshot, so the row is skipped
+        self.assertNotIn("Активность", neofetch)  # unknown in the snapshot, so the row is skipped
         says = self.card("generated/botyara-says.svg")
         self.assertIn("data:image/png;base64,", says)
         self.assertIn(bp.esc(bp.pick_quote(bp.load_quotes(self.root / "data" / "quotes.txt"), NOW.date())), says)
-        self.assertIn("I build bots that remember everything", self.card("typing.svg"))
+        self.assertIn("Делаю ботов, которые всё помнят", self.card("typing.svg"))
         self.card("wave.svg")
-        self.assertIn("snake hatches", self.card("generated/snake-dark.svg"))
+        self.assertIn("змейка вылупится", self.card("generated/snake-dark.svg"))
         self.assertEqual(json.loads((self.root / "data" / "snapshot.json").read_text()), self.snapshot)
 
     def test_live_build_saves_the_snapshot(self):
@@ -278,8 +299,8 @@ class BuildTest(unittest.TestCase):
         quiet(bp.build, self.root, now=NOW, fetch=lambda *args, **kwargs: live, system=lambda: SYSTEM)
         self.assertEqual(json.loads((self.root / "data" / "snapshot.json").read_text())["contributions_last_year"], 321)
         neofetch = self.card("generated/neofetch.svg")
-        self.assertIn("321 contributions in the last year", neofetch)
-        self.assertIn("live GitHub stats", neofetch)
+        self.assertIn("321 контрибуция за год", neofetch)
+        self.assertIn("живая статистика GitHub", neofetch)
 
     def test_api_failure_falls_back_to_the_snapshot(self):
         def broken(*args, **kwargs):
@@ -287,7 +308,7 @@ class BuildTest(unittest.TestCase):
 
         _, err = quiet(bp.build, self.root, now=NOW, fetch=broken, system=lambda: SYSTEM)
         self.assertIn("rate limited", err)
-        self.assertIn("snapshot of 2026-09-27", self.card("generated/neofetch.svg"))
+        self.assertIn("снимок от 2026-09-27", self.card("generated/neofetch.svg"))
 
     def test_real_snake_is_never_replaced_by_the_placeholder(self):
         generated = self.root / "assets" / "generated"
@@ -295,14 +316,14 @@ class BuildTest(unittest.TestCase):
         (generated / "snake-dark.svg").write_text("<svg xmlns='http://www.w3.org/2000/svg'/>")
         quiet(bp.build, self.root, offline=True, now=NOW, system=lambda: SYSTEM)
         self.assertEqual((generated / "snake-dark.svg").read_text(), "<svg xmlns='http://www.w3.org/2000/svg'/>")
-        self.assertIn("snake hatches", self.card("generated/snake-light.svg"))
+        self.assertIn("змейка вылупится", self.card("generated/snake-light.svg"))
 
     def test_unknown_system_stats_say_na(self):
         unknown = dict.fromkeys(SYSTEM)
         quiet(bp.build, self.root, offline=True, now=NOW, system=lambda: unknown)
         neofetch = self.card("generated/neofetch.svg")
-        self.assertIn(">n/a<", neofetch)
-        self.assertIn(">off<", neofetch)
+        self.assertIn(">н/д<", neofetch)
+        self.assertIn(">выкл<", neofetch)
 
 
 if __name__ == "__main__":

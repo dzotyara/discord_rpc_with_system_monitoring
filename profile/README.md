@@ -1,64 +1,64 @@
 <!--
-  Profile README for github.com/dzotyara.
-  Everything in assets/generated/ is redrawn every day by .github/workflows/refresh.yml
-  (scripts/build_profile.py + Platane/snk). To change the cards, edit data/*, not the SVGs.
+  README профиля github.com/dzotyara.
+  Всё в assets/generated/ каждый день перерисовывает .github/workflows/refresh.yml
+  (scripts/build_profile.py + Platane/snk). Чтобы поменять карточки, правь data/*, а не SVG.
 -->
 
-hey <img src="assets/wave.svg" width="34" alt="👋"> I'm Nikita
-===============================================================
+привет <img src="assets/wave.svg" width="34" alt="👋"> я Никита
+=================================================================
 
 <div align="center">
 
-<img src="assets/typing.svg" alt="Python developer · bot tamer · I build bots that remember everything">
+<img src="assets/typing.svg" alt="Python-разработчик · укротитель ботов · делаю ботов, которые всё помнят">
 
-<img src="assets/generated/neofetch.svg" alt="neofetch-style card: live GitHub stats plus the CPU, RAM and swap of the runner that drew it">
+<img src="assets/generated/neofetch.svg" alt="Карточка в стиле neofetch: живая статистика GitHub и загрузка CPU, RAM и swap раннера, который её нарисовал">
 
 </div>
 
-- 🤖 Right now I'm building **[Botyara](https://github.com/dzotyara/backseat)**, a Telegram & Discord group-chat member that remembers the whole conversation (and quotes it back at you)
+- 🤖 Сейчас делаю **[Ботяру](https://github.com/dzotyara/backseat)** — участника групповых чатов в Telegram и Discord, который помнит всю беседу и припоминает её к месту
 
-- 💬 Ask me about **Telegram & Discord bots, LLM tooling, FastAPI backends, Discord Rich Presence and making logs readable**
+- 💬 Спрашивай меня про **ботов для Telegram и Discord, LLM-инструменты, бэкенды на FastAPI, Discord Rich Presence и то, как сделать логи читаемыми**
 
-- 🖥️ Fun fact: I made my Discord status show my [CPU, RAM and swap](https://github.com/dzotyara/discord_rpc_with_system_monitoring). The card above does the same for the GitHub runner that drew it
+- 🖥️ Фан-факт: я научил свой статус в Discord показывать [CPU, RAM и swap](https://github.com/dzotyara/discord_rpc_with_system_monitoring). Карточка выше делает то же самое для раннера GitHub, который её нарисовал
 
-- 🎮 Rich Presence for games is a hobby too: see my [War Thunder RPC fork](https://github.com/dzotyara/WarThunderDiscordRPC_Fork)
+- 🎮 Rich Presence для игр — тоже моё хобби: вот [форк War Thunder RPC](https://github.com/dzotyara/WarThunderDiscordRPC_Fork)
 
-- 📫 How to reach me: open an issue in any of my repos
-<!-- Add your contacts here, e.g.
+- 📫 Как со мной связаться: открой issue в любом моём репозитории
+<!-- Добавь сюда контакты, например:
   [Telegram](https://t.me/<username>), [Discord](https://discord.com/users/<user_id>), [LinkedIn](https://linkedin.com/in/<username>)
 -->
 
-# Things I've Built
+# Что я сделал
 
-| | Project | What it does | Stack |
+| | Проект | Что делает | Стек |
 |---|---|---|---|
-| 🤖 | **[backseat](https://github.com/dzotyara/backseat)** | Botyara: a Telegram & Discord group-chat bot with long-term memory, weekly digests and a web panel. 233 tests | aiogram · discord.py · OpenRouter · SQLite · Docker |
-| 🧠 | **[Quizzard](https://github.com/dzotyara/Quizzard)** | Telegram quiz bot: any topic, three difficulty levels, questions streamed from an LLM, multiplayer | aiogram · SQLAlchemy · Alembic · Docker |
-| 📜 | **[WebLoggy](https://github.com/dzotyara/WebLoggy)** | Turns Python logs into a live local web UI: pages, traces, search, Telegram/Discord alerts | Python · HTML · CSS · JS |
-| ✅ | **[approval-service](https://github.com/dzotyara/approval-service)** | Approve / reject / cancel API with idempotency keys, an audit log, an outbox and workspace isolation | FastAPI · SQLAlchemy · Alembic · PostgreSQL |
-| 🖥️ | **[discord_rpc_with_system_monitoring](https://github.com/dzotyara/discord_rpc_with_system_monitoring)** | CPU, RAM and swap right in your Discord status | pypresence · psutil |
-| 🎨 | **[qwen-discord-bot](https://github.com/dzotyara/qwen-discord-bot)** | `/imagine` for Discord, powered by Qwen image generation | discord.py · DashScope |
+| 🤖 | **[backseat](https://github.com/dzotyara/backseat)** | Ботяра: бот-участник групповых чатов в Telegram и Discord с долгой памятью, итогами недели и веб-панелью. 233 теста | aiogram · discord.py · OpenRouter · SQLite · Docker |
+| 🧠 | **[Quizzard](https://github.com/dzotyara/Quizzard)** | Telegram-бот для викторин на любую тему: три уровня сложности, вопросы от LLM в реальном времени, мультиплеер | aiogram · SQLAlchemy · Alembic · Docker |
+| 📜 | **[WebLoggy](https://github.com/dzotyara/WebLoggy)** | Превращает логи Python-приложения в живой веб-интерфейс: страницы, трейсы, поиск, уведомления в Telegram и Discord | Python · HTML · CSS · JS |
+| ✅ | **[approval-service](https://github.com/dzotyara/approval-service)** | API для одобрения, отклонения и отмены публикаций: идемпотентность, аудит-лог, outbox и изоляция воркспейсов | FastAPI · SQLAlchemy · Alembic · PostgreSQL |
+| 🖥️ | **[discord_rpc_with_system_monitoring](https://github.com/dzotyara/discord_rpc_with_system_monitoring)** | Загрузка CPU, RAM и swap прямо в статусе Discord | pypresence · psutil |
+| 🎨 | **[qwen-discord-bot](https://github.com/dzotyara/qwen-discord-bot)** | `/imagine` для Discord: генерирует картинки через Qwen | discord.py · DashScope |
 
-# Some of My Favorite Tools
+# Любимые инструменты
 
-[![My skills](https://skillicons.dev/icons?i=py,fastapi,sqlite,postgres,docker,linux,bash,git,github,githubactions,discord,html,css,js,md&perline=15)](https://skillicons.dev)
+[![Мои инструменты](https://skillicons.dev/icons?i=py,fastapi,sqlite,postgres,docker,linux,bash,git,github,githubactions,discord,html,css,js,md&perline=15)](https://skillicons.dev)
 
-# My settings.json
+# Мой settings.json
 
 ```jsonc
-// same format as my Discord RPC monitor
+// тот же формат, что у моего Discord RPC-монитора
 {
     "client_id": "dzotyara",
-    "name": "Nikita",
+    "name": "Никита",
     "update_interval": 5,
-    "monitoring_1": "bots_online",     // Botyara, Quizzard, /imagine
-    "monitoring_2": "tests_passed",    // 233 in backseat alone
+    "monitoring_1": "bots_online",     // Ботяра, Quizzard, /imagine
+    "monitoring_2": "tests_passed",    // 233 только в backseat
     "monitoring_3": "coffee_percent",
-    "monitoring_4": "swap_percent",    // brain swap, mostly regex
+    "monitoring_4": "swap_percent",    // своп мозга, в основном регулярками
     "stack": ["Python", "aiogram", "discord.py", "FastAPI", "SQLAlchemy", "Docker"],
     "favorites": {
         "language": "Python",
-        "database": "SQLite, until it isn't",
+        "database": "SQLite, пока хватает",
         "license": "MIT",
         "game": "War Thunder",
         "emoji": "🤖"
@@ -68,18 +68,18 @@ hey <img src="assets/wave.svg" width="34" alt="👋"> I'm Nikita
 
 <div align="center">
 
-<h3>Botyara's comment of the day</h3>
+<h3>Комментарий дня от Ботяры</h3>
 
-<img src="assets/generated/botyara-says.svg" alt="Botyara, the bot from backseat, posts a new snarky line every day">
+<img src="assets/generated/botyara-says.svg" alt="Ботяра, бот из backseat, каждый день пишет новую ехидную реплику">
 
-<h3>My contributions, as eaten by a snake</h3>
+<h3>Мои контрибуции на обед змейке</h3>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/generated/snake-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/generated/snake-light.svg">
-  <img alt="A snake eating my contribution graph" src="assets/generated/snake-light.svg">
+  <img alt="Змейка ест мой граф контрибуций" src="assets/generated/snake-light.svg">
 </picture>
 
-<sub>The cards on this page are redrawn every day by <a href=".github/workflows/refresh.yml">a GitHub Action</a> and <a href="scripts/build_profile.py">a small Python script</a>.</sub>
+<sub>Карточки на этой странице каждый день перерисовывают <a href=".github/workflows/refresh.yml">GitHub Action</a> и <a href="scripts/build_profile.py">небольшой Python-скрипт</a>.</sub>
 
 </div>
